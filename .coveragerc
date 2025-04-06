@@ -1,0 +1,27 @@
+[run]
+source = llm_bench_local
+omit =
+    */tests/*
+    */venv/*
+    */env/*
+    */site-packages/*
+    */__init__.py
+    */migrations/*
+    */settings.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    pass
+    raise ImportError
+    except ImportError:
+    def main()
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abc.abstractmethod
+
+[html]
+directory = coverage_html 

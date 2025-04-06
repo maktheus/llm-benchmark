@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Data
+data/models/*
+data/db/*
+data/cache/*
+!data/models/.gitkeep
+!data/db/.gitkeep
+!data/cache/.gitkeep
+
+# Docker
+.docker/
+
+# Testes
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Outros
+.DS_Store
+.env
+.env.local
+.env.*.local 
