@@ -4,6 +4,14 @@
 
 O LLM Bench Local é construído como um microserviço modular, seguindo princípios de Clean Architecture e Domain-Driven Design. A aplicação é dividida em camadas bem definidas, cada uma com responsabilidades específicas.
 
+Para um benchmark de LLM completo, a solução pode ser organizada em três projetos interligados:
+
+1. **Core** – Biblioteca com toda a lógica de machine learning, execução de modelos e pipelines RAG.
+2. **Backend** – API e orquestração dos benchmarks, expondo serviços REST.
+3. **Frontend** – Interface web para configuração de testes e visualização de resultados.
+
+Esta estrutura facilita a evolução independente de cada parte e permite integrações com novas ferramentas no futuro.
+
 ## Camadas da Aplicação
 
 ### 1. API Layer (Interface)
@@ -45,7 +53,15 @@ A camada de infraestrutura lida com:
 - `Database`: Gerenciamento de persistência (SQLite)
 - `HardwareMonitor`: Coleta métricas de hardware
 - `LLMRunner`: Executa modelos de linguagem
-- `Logger`: Sistema de logging
+    - `Logger`: Sistema de logging
+
+### 4. Dataset Layer
+
+A nova camada de dataset centraliza a gestão de conjuntos de dados usados nos benchmarks e pipelines RAG.
+Ela permite registrar datasets do Hugging Face Hub ou arquivos locais e carregá-los conforme necessário.
+
+**Componentes:**
+    - `DatasetManager`: Registra, lista e carrega datasets
 
 ## Fluxo de Dados
 

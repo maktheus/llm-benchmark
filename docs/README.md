@@ -3,6 +3,8 @@
 ## Visão Geral
 LLM Bench Local é uma ferramenta para benchmarking de modelos de linguagem locais. Ela permite avaliar o desempenho de diferentes modelos em termos de velocidade, uso de recursos e qualidade das respostas.
 
+Para um panorama geral dos requisitos do sistema, consulte o documento [docs/prd.md](prd.md).
+
 ## Estrutura do Projeto
 ```
 llm_bench_local/
@@ -36,6 +38,8 @@ A API está disponível em `http://localhost:8000/api/v1` com os seguintes endpo
 - `/benchmarks` - Execução de benchmarks
 - `/models` - Gerenciamento de modelos
 - `/hardware` - Métricas de hardware
+- `/datasets` - Registro e listagem de datasets
+- `/rag` - Endpoints para testes de RAG
 
 ## Licença
 MIT License - veja o arquivo LICENSE para detalhes. 

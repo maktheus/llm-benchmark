@@ -8,6 +8,14 @@
 
 A ferramenta é construída como um serviço local com uma API REST, permitindo integração fácil com frontends, scripts ou outras ferramentas de automação. Ela é projetada para ser empacotada com Docker para facilitar a instalação e garantir a reprodutibilidade dos ambientes.
 
+## Divisão em Projetos
+
+Este repositório contém o **LLM Core Benchmark**, responsável pela execução dos testes e pipelines de machine learning. Outros dois projetos serão desenvolvidos separadamente:
+- **Backend**: API REST que orquestra benchmarks e armazena resultados.
+- **Frontend**: interface web para configuração e visualização das métricas.
+
+Para detalhes completos de requisitos, consulte [docs/prd.md](docs/prd.md).
+
 ## Funcionalidades Principais
 
 *   **Benchmarking Local:** Execute tarefas de benchmark de LLM diretamente no seu hardware.
@@ -265,11 +273,13 @@ Por favor, certifique-se de adicionar testes para suas funcionalidades e de que 
 Este projeto é licenciado sob a Licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
 ## Roadmap / Trabalho Futuro
-
+*   Implementação completa do `DatasetManager` e APIs de RAG.
+*   Separação dos projetos Backend e Frontend.
 *   Desenvolvimento de um Frontend Web simples para interagir com a API.
 *   Suporte a mais backends de LLM (ex: TensorRT-LLM, ONNX Runtime).
 *   Suporte a mais tarefas de benchmark (Sumarização, Q&A, etc.).
 *   Coleta de métricas de hardware mais detalhadas (energia, uso de barramento PCIe).
 *   Melhor gerenciamento e visualização de resultados históricos.
 *   Empacotamento como instalador nativo (opcional).
-*   Suporte a benchmarks distribuídos (múltiplas máquinas). 
+*   Suporte a benchmarks distribuídos (múltiplas máquinas).
+
