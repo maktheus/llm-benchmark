@@ -42,6 +42,8 @@ data/cache/*
 !data/models/.gitkeep
 !data/db/.gitkeep
 !data/cache/.gitkeep
+data/datasets/*
+!data/datasets/.gitkeep
 
 # Docker
 .docker/
