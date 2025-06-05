@@ -37,6 +37,7 @@ logs/
 
 # Data
 data/models/*
+!data/models/config.json
 data/db/*
 data/cache/*
 !data/models/.gitkeep

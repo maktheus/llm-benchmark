@@ -16,7 +16,7 @@ def mock_db():
 @pytest.fixture
 def repository(mock_db):
     """Fixture para o BenchmarkRepository."""
-    return BenchmarkRepository("test.db")
+    return BenchmarkRepository("test.db", ensure_tables=False)
 
 def test_create_benchmark(repository, mock_db):
     """Testa a criação de um benchmark."""
