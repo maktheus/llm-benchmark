@@ -40,16 +40,19 @@ class Settings(BaseSettings):
     DEFAULT_TOP_P: float = 0.95
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", case_sensitive=True
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+        extra="allow",
     )
 
     def __init__(self, **data):
         super().__init__(**data)
-        self.base_dir = Path(__file__).parent.parent.parent
-        self.data_dir = self.base_dir / "data"
-        self.models_dir = self.data_dir / "models"
-        self.db_dir = self.data_dir / "db"
-        self.datasets_dir = self.data_dir / "datasets"
+        object.__setattr__(self, "base_dir", Path(__file__).parent.parent.parent)
+        object.__setattr__(self, "data_dir", self.base_dir / "data")
+        object.__setattr__(self, "models_dir", self.data_dir / "models")
+        object.__setattr__(self, "db_dir", self.data_dir / "db")
+        object.__setattr__(self, "datasets_dir", self.data_dir / "datasets")
 
         # Carrega configurações dos modelos
         self.models_config = self._load_models_config()

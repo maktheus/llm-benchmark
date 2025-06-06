@@ -7,6 +7,7 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy import create_engine, Column, String, Float, JSON, DateTime, Integer, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
+import sqlite3
 from pathlib import Path
 from contextlib import contextmanager
 
@@ -83,6 +84,31 @@ class Database:
             raise
         finally:
             session.close()
+
+
+class DatabaseConnection:
+    """Wrapper simples de conexao SQLite usada nos testes."""
+
+    def __init__(self, db_path: str):
+        self.db_path = db_path
+        self._ensure_db_exists()
+
+    def _ensure_db_exists(self) -> None:
+        Path(self.db_path).parent.mkdir(parents=True, exist_ok=True)
+
+    def execute_query(self, query: str, params: Optional[List] = None):
+        params = params or []
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute(query, params)
+        if query.lstrip().upper().startswith("SELECT"):
+            rows = cur.fetchall()
+            conn.close()
+            return [dict(row) for row in rows]
+        conn.commit()
+        conn.close()
+
 
     def save_benchmark(self, result: BenchmarkResult):
         """Salva um resultado de benchmark.

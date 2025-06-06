@@ -1,0 +1,8 @@
+{
+  "gpt2": {
+    "model_id": "gpt2",
+    "provider": "huggingface",
+    "max_tokens": 100,
+    "parameters": "unknown"
+  }
+}

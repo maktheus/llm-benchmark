@@ -32,6 +32,11 @@ class BenchmarkRequest(BaseModel):
     )
 
 
+class BenchmarkCreate(BenchmarkRequest):
+    """Compatibilidade com versões antigas."""
+    job_id: Optional[str] = None
+
+
 class HardwareMetrics(BaseModel):
     """Métricas de hardware coletadas durante o benchmark."""
     cpu_usage: float = Field(..., description="Uso de CPU em porcentagem")
