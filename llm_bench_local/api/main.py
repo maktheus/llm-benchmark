@@ -7,9 +7,19 @@ from typing import Optional, Dict, List
 from llm_bench_local.core.benchmark import Benchmark
 from llm_bench_local.persistence.crud import BenchmarkRepository
 from llm_bench_local.config.settings import settings
+from llm_bench_local.api.routers import datasets
+
+try:
+    from llm_bench_local.api.routers import rag
+except Exception:  # pragma: no cover - optional dependency
+    rag = None
 
 app = FastAPI(title="LLM Bench Local API")
 repo = BenchmarkRepository(settings.db_path)
+
+app.include_router(datasets.router, prefix="/api/v1")
+if rag is not None:
+    app.include_router(rag.router, prefix="/api/v1")
 
 class RunRequest(BaseModel):
     model_id: str
