@@ -10,21 +10,24 @@ A ferramenta é construída como um serviço local com uma API REST, permitindo 
 
 ## Divisão em Projetos
 
-Este repositório contém o **LLM Core Benchmark**, responsável pela execução dos testes e pipelines de machine learning. Outros dois projetos serão desenvolvidos separadamente:
-- **Backend**: API REST que orquestra benchmarks e armazena resultados.
-- **Frontend**: interface web para configuração e visualização das métricas.
+O repositório é organizado em módulos independentes. Aqui está a biblioteca **LLM Core Benchmark**, responsável por executar os testes e pipelines de machine learning. Além deste núcleo existem dois serviços que completam a solução:
+* **Backend** – API REST que orquestra os benchmarks e mantém os resultados.
+* **Frontend** – aplicação web que permite configurar experimentos e visualizar métricas.
 
 Para detalhes completos de requisitos, consulte [docs/prd.md](docs/prd.md).
 
 ## Funcionalidades Principais
 
-*   **Benchmarking Local:** Execute tarefas de benchmark de LLM diretamente no seu hardware.
-*   **Monitoramento de Hardware:** Colete métricas de uso de CPU, GPU (incluindo VRAM), RAM e temperatura durante a execução do benchmark.
-*   **Suporte Flexível a Modelos:** Projetado para suportar diferentes backends de inferência (ex: Hugging Face Transformers, llama.cpp) e formatos de modelo.
-*   **API RESTful:** Gerencie e consulte benchmarks através de uma API HTTP (ideal para integração com um frontend ou scripts).
-*   **Armazenamento de Resultados:** Salve os resultados detalhados (métricas de performance do LLM e do hardware) localmente (ex: SQLite, JSON) para análise posterior.
-*   **Configurável:** Defina quais modelos testar, quais tarefas executar e como o hardware deve ser monitorado.
-*   **Conteinerizado:** Empacotado com Docker para fácil implantação e execução consistente em diferentes sistemas.
+Esta ferramenta foi pensada para uso local e oferece:
+
+* **Benchmarking de LLMs** diretamente no seu hardware.
+* **Monitoramento de hardware** (CPU, GPU, RAM, temperatura e VRAM) durante a execução.
+* **Suporte a diversos modelos e backends**, como Hugging Face Transformers ou llama.cpp.
+* **Gerenciamento de datasets** e pipeline RAG simples.
+* **API REST** para iniciar e consultar benchmarks a partir de scripts ou frontends.
+* **Persistência local** de resultados em formatos simples, como SQLite ou JSON.
+* **Configuração flexível** de modelos, tarefas e coleta de métricas.
+* **Distribuição via Docker** para manter o ambiente reproduzível em qualquer sistema.
 
 ## Arquitetura
 
@@ -115,47 +118,29 @@ A aplicação segue uma arquitetura de microserviço (mesmo que implantada inici
 
 ## Estrutura do Projeto
 
+Cada diretório desempenha um papel específico na aplicação. A visão geral é a seguinte:
+
 ```
 llm-bench-local/
-├── .dockerignore
-├── .env.example
-├── .gitattributes
-├── .gitignore
-├── .pre-commit-config.yaml   # Opcional
-├── docker-compose.yml
-├── Dockerfile
-├── LICENSE
-├── Makefile                  # Opcional
-├── pyproject.toml
-├── README.md
-│
-├── data/                     # Dados locais (NÃO versionados)
+├── docker-compose.yml         # Orquestração com Docker
+├── Dockerfile                 # Construção da imagem
+├── data/                      # Dados locais (não versionados)
 │   ├── models/
 │   └── db/
-│
-├── docs/                     # Documentação
-│   └── architecture.md
-│
-├── scripts/                  # Scripts auxiliares
-│   └── run_benchmark_cli.py
-│
-├── llm_bench_local/          # Pacote Python principal
-│   ├── __init__.py
-│   ├── api/                  # Módulo da API
-│   ├── core/                 # Lógica principal e orquestração
-│   ├── llm/                  # Interação com LLMs
-│   ├── hardware/             # Monitoramento de hardware
-│   ├── persistence/          # Armazenamento de dados
-│   ├── schemas/              # Esquemas Pydantic
-│   ├── config/               # Configuração
-│   └── utils/                # Utilitários
-│
-└── tests/                    # Testes automatizados
-    ├── integration/
-    └── unit/
+├── docs/                      # Documentação e diagramas
+├── scripts/                   # Utilidades de linha de comando
+├── llm_bench_local/           # Código principal
+│   ├── api/                   # Rotas e modelos
+│   ├── core/                  # Execução do benchmark
+│   ├── hardware/              # Métricas de CPU/GPU
+│   ├── datasets/              # Registro e carregamento
+│   └── persistence/           # Resultados em disco
+└── tests/                     # Testes unitários e de integração
 ```
 
 ## Começando (Getting Started)
+
+Você pode executar o LLM Bench Local em um contêiner Docker ou configurá-lo diretamente no seu ambiente. Os passos a seguir mostram as duas abordagens.
 
 ### Pré-requisitos
 
@@ -238,6 +223,38 @@ curl -X GET "http://localhost:8000/benchmarks/{job_id}"
 *(Substitua `{job_id}` pelo ID retornado ao iniciar o benchmark)*
 
 Você também pode usar scripts (como o exemplo em `scripts/run_benchmark_cli.py`) ou um futuro frontend para interagir com a API.
+
+### Endpoints Principais
+
+| Método | Rota | Descrição |
+|-------|--------------------------------|---------------------------------------------|
+| `GET` | `/api/v1/health` | Verifica se o serviço está ativo. |
+| `POST` | `/api/v1/benchmarks/run` | Inicia um benchmark com os parâmetros enviados. |
+| `GET` | `/api/v1/benchmarks/{job_id}` | Consulta o resultado de um benchmark específico. |
+| `GET` | `/api/v1/benchmarks` | Lista benchmarks cadastrados. |
+| `GET` | `/api/v1/hardware/metrics/{job_id}` | Retorna métricas de hardware do benchmark. |
+| `GET` | `/api/v1/models` | Lista modelos disponíveis para teste. |
+| `GET` | `/api/v1/datasets` | Lista datasets registrados. |
+| `POST` | `/api/v1/datasets` | Registra um novo dataset. |
+| `POST` | `/api/v1/rag/build` | Constrói o índice do pipeline RAG. |
+| `POST` | `/api/v1/rag/query` | Realiza uma consulta no pipeline RAG. |
+
+## Datasets e Pipeline RAG
+
+O `DatasetManager` permite registrar conjuntos de dados do Hugging Face Hub e recuperá-los quando necessário. Esses datasets são usados pelo pipeline RAG simplificado, que combina recuperação de documentos via FAISS com geração de texto do modelo escolhido.
+
+```ascii
+ +---------------+     build_index      +------------+
+ | DatasetManager| -------------------> |  FAISS IDX  |
+ +---------------+                      +------------+
+         |                                   |
+         |             consulta               v
+         +------------------------------->  [LLM]
+```
+
+1. **Registro de Dataset** – envie nome e `hf_id` para `/api/v1/datasets`.
+2. **Construção de Índice** – utilize `/api/v1/rag/build` informando o dataset registrado.
+3. **Consulta** – realize perguntas para `/api/v1/rag/query` e receba respostas geradas com recuperação de contexto.
 
 ## Executando Testes
 

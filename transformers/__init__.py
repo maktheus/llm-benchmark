@@ -10,6 +10,10 @@ class AutoModelForCausalLM:
                 return [[0]]
         return Model()
 
+
+class AutoModelForSeq2SeqLM(AutoModelForCausalLM):
+    """Modelo simplificado usado nos testes."""
+
 class AutoTokenizer:
     @staticmethod
     def from_pretrained(model_id):
