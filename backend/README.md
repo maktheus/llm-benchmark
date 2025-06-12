@@ -66,3 +66,20 @@ backend/
 ```
 
 Este é apenas o início do Backend. Novas rotas e módulos serão adicionados conforme o desenvolvimento do projeto.
+
+## Como executar
+
+1. Instale as dependências do projeto:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. Inicie o servidor localmente:
+
+   ```bash
+   uvicorn backend.main:app --port 8000 --reload
+   ```
+
+3. Acesse `http://localhost:8000/api/v1/health` para verificar se o serviço está ativo.
+4. Utilize as demais rotas listadas acima para criar e consultar benchmarks, modelos e datasets.
